@@ -1,37 +1,42 @@
 <template>
   <div id="app">
     <div class="player">
-      <h1>Reproductor de Música</h1>
+      <h1 class="title">Reproductor de Música</h1>
 
       <!-- Selector de archivos múltiples para cargar música -->
-      <input type="file" @change="onFilesSelected" accept="audio/*" multiple />
+      <input type="file" @change="onFilesSelected" accept="audio/*" multiple class="file-input" />
 
-      <div v-if="audioUrl">
+      <div v-if="audioUrl" class="audio-player">
         <audio
           ref="audio"
           controls
           :src="audioUrl"
-          @ended="onAudioEnded" 
+          @ended="onAudioEnded"
           autoplay
         >
           Tu navegador no soporta el elemento de audio.
         </audio>
 
         <div class="controls">
-          <button @click="goToPrevTrack">Anterior</button>
-          <button @click="playNextTrack">Siguiente</button>
-          <button @click="toggleShuffle">{{ shuffle ? 'Desactivar Aleatorio' : 'Activar Aleatorio' }}</button>
-          <button @click="toggleRepeat">{{ repeat ? 'Desactivar Repetir' : 'Activar Repetir' }}</button>
+          <div class="main-controls">
+            <button class="control-btn prev" @click="goToPrevTrack">Anterior</button>
+            <button class="control-btn next" @click="playNextTrack">Siguiente</button>
+          </div>
+
+          <div class="toggle-controls">
+            <button class="control-btn shuffle" @click="toggleShuffle">{{ shuffle ? 'Desactivar Aleatorio' : 'Activar Aleatorio' }}</button>
+            <button class="control-btn repeat" @click="toggleRepeat">{{ repeat ? 'Desactivar Repetir' : 'Activar Repetir' }}</button>
+          </div>
         </div>
 
-        <p v-if="isPlaying">Reproduciendo: {{ fileName }}</p>
+        <p v-if="isPlaying" class="current-track">Reproduciendo: {{ fileName }}</p>
       </div>
 
       <!-- Lista de archivos seleccionados -->
-      <div v-if="fileNames.length > 0">
-        <h3>Archivos Seleccionados:</h3>
+      <div v-if="fileNames.length > 0" class="file-list">
+        <h3 class="list-title">Archivos Seleccionados:</h3>
         <ul>
-          <li v-for="(file, index) in fileNames" :key="index" @click="selectTrack(index)">
+          <li v-for="(file, index) in fileNames" :key="index" @click="selectTrack(index)" class="file-item">
             {{ file.name }}
           </li>
         </ul>
@@ -159,41 +164,143 @@ export default {
 
 <style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #333;
+  background-color: #f0f4f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
 }
 
 .player {
-  margin: 20px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 650px;
+  width: 100%;
+  text-align: center;
 }
 
-.controls button {
-  margin: 10px;
+.title {
+  font-size: 2.4em;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+.file-input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  width: 80%;
+  margin-bottom: 30px;
+  background-color: #ecf0f1;
+  font-size: 1em;
+}
+
+.audio-player {
+  margin-top: 30px;
 }
 
 audio {
   width: 100%;
+  border-radius: 10px;
   margin-top: 20px;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-li {
+.main-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.control-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 10px;
+  border-radius: 8px;
   cursor: pointer;
-  padding: 5px;
-  margin: 5px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-li:hover {
-  background-color: #f0f0f0;
+.control-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.toggle-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.shuffle {
+  background-color: #2ecc71;
+}
+
+.shuffle:hover {
+  background-color: #27ae60;
+}
+
+.repeat {
+  background-color: #f39c12;
+}
+
+.repeat:hover {
+  background-color: #e67e22;
+}
+
+.current-track {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #7f8c8d;
+}
+
+.file-list {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.list-title {
+  font-size: 1.4em;
+  margin-bottom: 15px;
+  color: #34495e;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.file-item {
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background-color: #ecf0f1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1em;
+}
+
+.file-item:hover {
+  background-color: #bdc3c7;
+  transform: translateY(-2px);
 }
 </style>
+
+
 
 
 
